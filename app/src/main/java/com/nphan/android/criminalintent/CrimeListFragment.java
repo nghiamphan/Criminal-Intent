@@ -6,15 +6,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
+
+    private int mNormalLayoutId = R.layout.list_item_crime;
+    private int mPoliceLayoutId = R.layout.list_item_crime_police;
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
@@ -46,13 +51,25 @@ public class CrimeListFragment extends Fragment {
 
         private TextView mTitleTextView;
         private TextView mDateTextView;
+        private Button mContactPoliceButton;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_crime, parent, false));
+        public CrimeHolder(LayoutInflater inflater, ViewGroup parent, int layoutId) {
+            super(inflater.inflate(layoutId, parent, false));
             itemView.setOnClickListener(this);
 
             mTitleTextView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
+
+            if (layoutId == mPoliceLayoutId) {
+                mContactPoliceButton = itemView.findViewById(R.id.contact_police_button);
+                mContactPoliceButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity(), "Reported " + mCrime.getTitle() + " to Police", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+            }
         }
 
         public void bind(Crime crime) {
@@ -80,19 +97,31 @@ public class CrimeListFragment extends Fragment {
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-
-            return new CrimeHolder(layoutInflater, parent);
+            Log.i("HIHI", "viewType: " + Integer.toString(viewType));
+            return new CrimeHolder(layoutInflater, parent, viewType);
         }
 
         @Override
         public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
             Crime crime = mCrimes.get(position);
             holder.bind(crime);
+            Log.i("HIHI", "position: " + Integer.toString(position));
         }
 
         @Override
         public int getItemCount() {
             return mCrimes.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            int viewType = mNormalLayoutId;
+            Crime crime = mCrimes.get(position);
+            if (crime.isRequiresPolice()) {
+                viewType = mPoliceLayoutId;
+            }
+            Log.i("HIHI", "position:" + Integer.toString(position) + " view type: " + Integer.toString(viewType));
+            return viewType;
         }
     }
 }
