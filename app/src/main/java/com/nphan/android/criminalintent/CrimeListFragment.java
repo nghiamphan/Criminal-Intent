@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ public class CrimeListFragment extends Fragment {
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+
+    private int mLastClickedItemPosition = 0;
 
     @Nullable
     @Override
@@ -49,7 +52,7 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         }
         else {
-            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyItemChanged(mLastClickedItemPosition);
         }
     }
 
@@ -79,6 +82,8 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            mLastClickedItemPosition = this.getLayoutPosition();
+            Log.i("POSITION", Integer.toString(mLastClickedItemPosition));
             Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
