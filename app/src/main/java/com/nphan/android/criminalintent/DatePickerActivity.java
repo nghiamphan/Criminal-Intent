@@ -14,23 +14,15 @@ public class DatePickerActivity extends SingleFragmentActivity {
 
     public static final String EXTRA_CRIME_DATE = "com.nphan.android.criminalintent.crime_date";
 
-    public static Intent newIntent(Context packageContext, int[] dateArray) {
+    public static Intent newIntent(Context packageContext, Date date) {
         Intent intent = new Intent(packageContext, DatePickerActivity.class);
-        intent.putExtra(EXTRA_CRIME_DATE, dateArray);
+        intent.putExtra(EXTRA_CRIME_DATE, date);
         return intent;
     }
 
     @Override
     protected Fragment createFragment() {
-
-        int[] dateArray = getIntent().getIntArrayExtra(EXTRA_CRIME_DATE);
-        int year = dateArray[0];
-        int month = dateArray[1];
-        int day = dateArray[2];
-        final int hour = dateArray[3];
-        final int minute = dateArray[4];
-        Date date = new GregorianCalendar(year, month, day, hour, minute).getTime();
-
+        Date date = (Date) getIntent().getSerializableExtra(EXTRA_CRIME_DATE);
         return DatePickerFragment.newInstance(date);
     }
 }

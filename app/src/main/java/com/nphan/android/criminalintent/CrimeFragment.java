@@ -76,7 +76,7 @@ public class CrimeFragment extends Fragment {
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = DatePickerActivity.newIntent(getActivity(), mCrime.getDateArray());
+                Intent intent = DatePickerActivity.newIntent(getActivity(), mCrime.getDate());
                 startActivityForResult(intent, REQUEST_DATE);
             }
         });

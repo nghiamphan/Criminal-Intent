@@ -16,17 +16,6 @@ public class Crime {
         mDate = new Date();
     }
 
-    public int[] getDateArray() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mDate);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR);
-        int minute = calendar.get(Calendar.MINUTE);
-        return new int[] {year, month, day, hour, minute};
-    }
-
     public UUID getId() {
         return mId;
     }
