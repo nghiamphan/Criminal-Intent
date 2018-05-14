@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class DatePickerActivity extends SingleFragmentActivity {
 
@@ -20,6 +22,15 @@ public class DatePickerActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new DatePickerFragment();
+
+        int[] dateArray = getIntent().getIntArrayExtra(EXTRA_CRIME_DATE);
+        int year = dateArray[0];
+        int month = dateArray[1];
+        int day = dateArray[2];
+        final int hour = dateArray[3];
+        final int minute = dateArray[4];
+        Date date = new GregorianCalendar(year, month, day, hour, minute).getTime();
+
+        return DatePickerFragment.newInstance(date);
     }
 }

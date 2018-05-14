@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -19,19 +20,19 @@ public class DatePickerFragment extends DialogFragment {
 
     public static final String EXTRA_DATE = "com.nphan.android.criminalintent.date";
 
-    //private static final String ARG_DATE = "date";
+    private static final String ARG_DATE = "date";
 
     private DatePicker mDatePicker;
     private Button mOkButton;
 
-    /*public static DatePickerFragment newInstance(Date date) {
+    public static DatePickerFragment newInstance(Date date) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATE, date);
 
         DatePickerFragment fragment = new DatePickerFragment();
         fragment.setArguments(args);
         return fragment;
-    }*/
+    }
 
     @Nullable
     @Override
@@ -39,16 +40,15 @@ public class DatePickerFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.date_picker_fragment, container, false);
 
         mDatePicker = v.findViewById(R.id.date_picker);
-        int[] dateArray = getActivity().getIntent()
-                .getIntArrayExtra(DatePickerActivity.EXTRA_CRIME_DATE);
-        int year = dateArray[0];
-        int month = dateArray[1];
-        int day = dateArray[2];
-        final int hour = dateArray[3];
-        final int minute = dateArray[4];
+        Date date = (Date) getArguments().getSerializable(ARG_DATE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int hour = calendar.get(Calendar.HOUR);
+        final int minute = calendar.get(Calendar.MINUTE);
         mDatePicker.init(year, month, day, null);
-
-        //setTargetFragment(CrimeFragment, CrimeFragment.REQUEST_DATE);
 
         mOkButton = v.findViewById(R.id.date_picker_ok_button);
         mOkButton.setOnClickListener(new View.OnClickListener() {
