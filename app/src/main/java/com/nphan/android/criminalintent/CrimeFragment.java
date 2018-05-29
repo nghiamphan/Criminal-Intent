@@ -42,6 +42,7 @@ public class CrimeFragment extends Fragment {
 
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_PICTURE = "DialogPicture";
 
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
@@ -204,6 +205,15 @@ public class CrimeFragment extends Fragment {
 
         mPhotoView = v.findViewById(R.id.crime_photo);
         updatePhotoView();
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPhotoFile == null || !mPhotoFile.exists()) return;
+                FragmentManager manager = getFragmentManager();
+                PhotoDialogFragment photoDialogFragment = PhotoDialogFragment.newInstance(mPhotoFile.getPath());
+                photoDialogFragment.show(manager, DIALOG_PICTURE);
+            }
+        });
 
         return v;
     }
@@ -284,6 +294,16 @@ public class CrimeFragment extends Fragment {
         else {
             Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
             mPhotoView.setImageBitmap(bitmap);
+        }
+    }
+
+    private Bitmap getPhotoView() {
+        if (mPhotoFile == null || !mPhotoFile.exists()) {
+            return null;
+        }
+        else {
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            return bitmap;
         }
     }
 }
