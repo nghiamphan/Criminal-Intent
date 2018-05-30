@@ -9,7 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +31,25 @@ public class CrimeListFragment extends Fragment {
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
     private Callbacks mCallbacks;
+
+    ItemTouchHelper.SimpleCallback mSimpltItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            List<Crime> crimes = CrimeLab.get(getActivity()).getCrimes();
+            int position = viewHolder.getAdapterPosition();
+            Crime crime = crimes.get(position);
+            CrimeLab.get(getActivity()).deleteCrime(crime);
+            crimes = CrimeLab.get(getActivity()).getCrimes();
+            mAdapter.setCrimes(crimes);
+            mAdapter.notifyDataSetChanged();
+            Log.i("SWIPE", "swipe");
+        }
+    };
 
     /**
      * Required interface for hosting activities
@@ -56,6 +77,9 @@ public class CrimeListFragment extends Fragment {
 
         mCrimeRecyclerView = view.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpltItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mCrimeRecyclerView);
 
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
